@@ -54,8 +54,8 @@
         <!--Pos/Neg Button-->
         <Button x:Name="btnPosNeg" Grid.Row="6" Grid.Column="0" Click="btnPosNeg_Click">+ / -</Button>
         
-        <!--Copy Button-->
-        <Button x:Name="btnCopy" Grid.Row="5" Grid.Column="2" Click="btnCopy_Click">Copy</Button>
+        <!--Comma Button-->
+        <Button x:Name="btnCopy" Grid.Row="6" Grid.Column="2" Click="btnCopy_Click">,</Button>
         
         <!--Percent Button -->
         <Button x:Name="btnPercent" Grid.Row="1" Grid.Column="0" Click="btnPercent_Click">%</Button>
