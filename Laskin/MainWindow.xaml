@@ -25,25 +25,28 @@
         </Grid.RowDefinitions>
         
         <!--Number buttons -->
-        <Button x:Name="btn7" Grid.Row="3" Grid.Column="0" Click="btn7_Click">7</Button>
-        <Button x:Name="btn8" Grid.Row="3" Grid.Column="1" Click="btn8_Click">8</Button>
-        <Button x:Name="btn9" Grid.Row="3" Grid.Column="2" Click="btn9_Click">9</Button>
+        <Button x:Name="btn7" Content="7" Grid.Row="3" Grid.Column="0" Click="btnNo_Click"></Button>
+        <Button x:Name="btn8" Content="8" Grid.Row="3" Grid.Column="1" Click="btnNo_Click"></Button>
+        <Button x:Name="btn9" Content="9" Grid.Row="3" Grid.Column="2" Click="btnNo_Click"></Button>
 
-        <Button x:Name="btn4" Grid.Row="4" Grid.Column="0" Click="btn4_Click">4</Button>
-        <Button x:Name="btn5" Grid.Row="4" Grid.Column="1" Click="btn5_Click">5</Button>
-        <Button x:Name="btn6" Grid.Row="4" Grid.Column="2" Click="btn6_Click">6</Button>
+        <Button x:Name="btn4" Content="4" Grid.Row="4" Grid.Column="0" Click="btnNo_Click"></Button>
+        <Button x:Name="btn5" Content="5" Grid.Row="4" Grid.Column="1" Click="btnNo_Click"></Button>
+        <Button x:Name="btn6" Content="6" Grid.Row="4" Grid.Column="2" Click="btnNo_Click"></Button>
 
-        <Button x:Name="btn1" Grid.Row="5" Grid.Column="0" Click="btn1_Click">1</Button>
-        <Button x:Name="btn2" Grid.Row="5" Grid.Column="1" Click="btn2_Click">2</Button>
-        <Button x:Name="btn3" Grid.Row="5" Grid.Column="2" Click="btn3_Click">3</Button>
+        <Button x:Name="btn1" Content="1" Grid.Row="5" Grid.Column="0" Click="btnNo_Click"></Button>
+        <Button x:Name="btn2" Content="2" Grid.Row="5" Grid.Column="1" Click="btnNo_Click"></Button>
+        <Button x:Name="btn3" Content="3" Grid.Row="5" Grid.Column="2" Click="btnNo_Click"></Button>
 
-        <Button x:Name="btn0" Grid.Row="6" Grid.Column="1">0</Button>
+        <Button x:Name="btn0" Content="0" Grid.Row="6" Grid.Column="1" Click="btnNo_Click"></Button>
+
+        <!--Comma Button-->
+        <Button x:Name="btnComma" Content="." Grid.Row="6" Grid.Column="2" Click="btnComma_Click"></Button>
         
         <!--Math Buttons-->
-        <Button x:Name="btnPlus" Grid.Row="2" Grid.Column="3" Click="btnPlus_Click">+</Button>
-        <Button x:Name="btnMinus" Grid.Row="3" Grid.Column="3" Click="btnMinus_Click">-</Button>
-        <Button x:Name="btnTimes" Grid.Row="4" Grid.Column="3" Click="btnTimes_Click">*</Button>
-        <Button x:Name="btnDivide" Grid.Row="5" Grid.Column="3" Click="btnDivide_Click">/</Button>
+        <Button x:Name="btnPlus" Content="+" Grid.Row="2" Grid.Column="3" Click="btnArithmetic_Click"></Button>
+        <Button x:Name="btnMinus" Content="-" Grid.Row="3" Grid.Column="3" Click="btnArithmetic_Click"></Button>
+        <Button x:Name="btnTimes" Content="*" Grid.Row="4" Grid.Column="3" Click="btnArithmetic_Click"></Button>
+        <Button x:Name="btnDivide" Content="/" Grid.Row="5" Grid.Column="3" Click="btnArithmetic_Click"></Button>
         <Button x:Name="btnEquals" Grid.Row="6" Grid.Column="3" Click="btnEquals_Click">=</Button>
         
         <!--Clear Buttons-->
@@ -53,10 +56,7 @@
         
         <!--Pos/Neg Button-->
         <Button x:Name="btnPosNeg" Grid.Row="6" Grid.Column="0" Click="btnPosNeg_Click">+ / -</Button>
-        
-        <!--Comma Button-->
-        <Button x:Name="btnCopy" Grid.Row="6" Grid.Column="2" Click="btnCopy_Click">,</Button>
-        
+
         <!--Percent Button -->
         <Button x:Name="btnPercent" Grid.Row="1" Grid.Column="0" Click="btnPercent_Click">%</Button>
 
