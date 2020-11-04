@@ -28,6 +28,8 @@ namespace Laskin
         bool hasOperator = false;
         bool hasResult = false;
         bool isInvalid = false;
+        double numberCopy = 0;
+        string operationCopy = null;
 
         public MainWindow()
         {
@@ -62,8 +64,18 @@ namespace Laskin
 
         private void btnEquals_Click(object sender, RoutedEventArgs e)
         {
+            numberCopy = number;
+            operationCopy = operation;
+
             if (hasOperator)
                 calculate();
+            else
+            {
+                number = numberCopy;
+                operation = operationCopy;
+                calculate();
+            }
+
             txtDisplay.Text = subTotal.ToString();
             hasResult = true;
         }
@@ -76,12 +88,21 @@ namespace Laskin
 
         private void btnPercent_Click(object sender, RoutedEventArgs e)
         {
-
+           
         }
 
         private void btn1x_Click(object sender, RoutedEventArgs e)
         {
-
+            if (txtDisplay.Text != "0")
+            {
+                number = (1 / Convert.ToDouble(txtDisplay.Text));
+                txtDisplay.Text = tempNumber = number.ToString();
+            }
+            else
+            {
+                txtDisplay.Text = "Invalid operation";
+                isInvalid = true;
+            }
         }
 
         private void btnPower_Click(object sender, RoutedEventArgs e)
