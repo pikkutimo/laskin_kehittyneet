@@ -22,8 +22,12 @@ namespace Laskin
     {
         List<string> operations = new List<string>();
         bool hasComma = false;
-        double tempValue = 0;
- 
+        bool digitsLocked = false;
+        string tempValue = null;
+        string operation = null;
+        double power = 2.0;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -73,17 +77,26 @@ namespace Laskin
 
         private void btn1x_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (txtDisplay.Text != "0")
+            {
+                tempValue = "1/" + txtDisplay.Text;
+                txtDisplay.Text = (1 / Convert.ToDouble(txtDisplay.Text)).ToString();
+                digitsLocked = true;
+            }
         }
 
         private void btnPower_Click(object sender, RoutedEventArgs e)
         {
-           
+            tempValue = txtDisplay.Text + "^2";
+            txtDisplay.Text =  Math.Pow(Convert.ToDouble(txtDisplay.Text), power).ToString();
+            digitsLocked = true;
         }
 
         private void btnSqrt_Click(object sender, RoutedEventArgs e)
         {
-           
+            tempValue = "sqrt(" + txtDisplay.Text + ")";
+            txtDisplay.Text = (Math.Sqrt(Convert.ToDouble(txtDisplay.Text))).ToString();
+            digitsLocked = true;
         }
 
         private void btnNo_Click(object sender, RoutedEventArgs e)
@@ -91,13 +104,16 @@ namespace Laskin
             if (txtDisplay.Text == "0")
                 txtDisplay.Text = null;
 
-            Button button = sender as Button;
-            txtDisplay.Text += button.Content.ToString(); 
+            if (digitsLocked != true)
+            {
+                Button button = sender as Button;
+                txtDisplay.Text += button.Content.ToString();
+            }
         }
 
         private void btnComma_Click(object sender, RoutedEventArgs e)
         {
-            if (hasComma == false)
+            if (hasComma == false && digitsLocked == false)
             {
                 Button button = sender as Button;
                 txtDisplay.Text += button.Content.ToString();
@@ -107,7 +123,33 @@ namespace Laskin
 
         private void btnArithmetic_Click(object sender, RoutedEventArgs e)
         {
-            
+            digitsLocked = false;
+
+            if (tempValue != null)
+            {
+                operations.Add(tempValue);
+                equation.Text += tempValue;
+                tempValue = null;
+            }
+            else
+            {
+                operations.Add(txtDisplay.Text);
+                equation.Text += txtDisplay.Text;
+            }
+
+            Button button = sender as Button;
+            operation = button.Content.ToString();
+
+            if (equation.Text == "0")
+                equation.Text = null;
+
+            equation.Text += operation;
+            operations.Add(operation);
+
+            operation = null;
+            hasComma = false;
+            digitsLocked = false;
+            txtDisplay.Text = "0";
         }
 
         private void calculate()
