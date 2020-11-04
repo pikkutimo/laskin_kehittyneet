@@ -20,8 +20,10 @@ namespace Laskin
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-
+        List<string> operations = new List<string>();
+        bool hasComma = false;
+        double tempValue = 0;
+ 
         public MainWindow()
         {
             InitializeComponent();
@@ -34,12 +36,15 @@ namespace Laskin
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
-            
+            txtDisplay.Text = "0";
         }
 
         private void btnBackspace_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (txtDisplay.Text.Length > 1)
+                txtDisplay.Text = txtDisplay.Text.Substring(0, txtDisplay.Text.Length - 1);
+            else
+                txtDisplay.Text = "0";
         }
 
         private void btnEquals_Click(object sender, RoutedEventArgs e)
@@ -49,6 +54,16 @@ namespace Laskin
 
         private void btnPosNeg_Click(object sender, RoutedEventArgs e)
         {
+            bool replace = false;
+
+            if (txtDisplay.Text.EndsWith("."))
+                replace = true;    
+
+            txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) * -1.0).ToString();
+
+            if (replace)
+                txtDisplay.Text += ".";
+            
         }
 
         private void btnPercent_Click(object sender, RoutedEventArgs e)
@@ -73,12 +88,21 @@ namespace Laskin
 
         private void btnNo_Click(object sender, RoutedEventArgs e)
         {
-          
+            if (txtDisplay.Text == "0")
+                txtDisplay.Text = null;
+
+            Button button = sender as Button;
+            txtDisplay.Text += button.Content.ToString(); 
         }
 
         private void btnComma_Click(object sender, RoutedEventArgs e)
         {
-           
+            if (hasComma == false)
+            {
+                Button button = sender as Button;
+                txtDisplay.Text += button.Content.ToString();
+                hasComma = true;
+            }
         }
 
         private void btnArithmetic_Click(object sender, RoutedEventArgs e)
