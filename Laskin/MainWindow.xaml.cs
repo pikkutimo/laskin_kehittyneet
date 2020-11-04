@@ -20,14 +20,15 @@ namespace Laskin
     /// </summary>
     public partial class MainWindow : Window
     {
-        decimal number = 0;
-        decimal subtotal = 0;
+        double number = 0;
+        double subTotal = 0;
         string operation = null;
-        string equation = null;
-        string input = null;
-        bool isComma = false;
-        bool isAnswer = false;
-        bool negativeNumber = false;
+        string tempNumber = null;
+        bool hasComma = false;
+        bool hasOperator = false;
+        bool hasResult = false;
+        bool isInvalid = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,40 +36,42 @@ namespace Laskin
 
         private void btnClearEntry_Click(object sender, RoutedEventArgs e)
         {
-
+            tempNumber = "0";
+            number = 0;
+            txtDisplay.Text = tempNumber;
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
-
+            ClearAll();
         }
 
         private void btnBackspace_Click(object sender, RoutedEventArgs e)
         {
-
+            if (txtDisplay.Text.Length < 2)
+            {
+                txtDisplay.Text = "0";
+                number = 0;
+            }
+            else
+            {
+                txtDisplay.Text = txtDisplay.Text.Substring(0, txtDisplay.Text.Length - 1);
+                number = Convert.ToDouble(txtDisplay.Text);
+            }
         }
 
         private void btnEquals_Click(object sender, RoutedEventArgs e)
         {
-            if (input != null)
-            {
+            if (hasOperator)
                 calculate();
-            }
-
-            input = null;
-            operation = null;
-            isComma = false;
-
-            txtDisplay.Text = subtotal.ToString();
-            isAnswer = true;
-            subtotal = 0;
+            txtDisplay.Text = subTotal.ToString();
+            hasResult = true;
         }
 
         private void btnPosNeg_Click(object sender, RoutedEventArgs e)
         {
-            decimal tempValue = Convert.ToDecimal(input);
-            tempValue *= (decimal)-1;
-            input = tempValue.ToString();
+            number *= -1.0;
+            txtDisplay.Text = number.ToString();
         }
 
         private void btnPercent_Click(object sender, RoutedEventArgs e)
@@ -93,81 +96,99 @@ namespace Laskin
 
         private void btnNo_Click(object sender, RoutedEventArgs e)
         {
-            if (txtDisplay.Text == "0")
-                txtDisplay.Text = equation = null;
-
-            if (isAnswer == true)
+            if (hasResult || isInvalid)
             {
-                txtDisplay.Text = null;
-                isAnswer = false;
-                equation = subtotal.ToString();
+                ClearAll();
             }
-
             Button button = sender as Button;
-            input += button.Content.ToString();
+            tempNumber += button.Content.ToString();
+            txtDisplay.Text = tempNumber;
 
-            number = Convert.ToDecimal(input);
+            number = Convert.ToDouble(txtDisplay.Text);
 
-            txtDisplay.Text = equation + input; 
+            if (hasOperator == false)
+            {
+                subTotal = number;
+                number = 0;
+            }
         }
 
         private void btnComma_Click(object sender, RoutedEventArgs e)
         {
-            if (isComma == false)
+            if (hasComma == false)
             {
-                isComma = true;
-
-                Button button = sender as Button;
-                input += button.Content.ToString();
-                txtDisplay.Text += button.Content.ToString();
+                tempNumber += ".";
+                txtDisplay.Text = tempNumber;
+                hasComma = true;
             }
-
         }
 
         private void btnArithmetic_Click(object sender, RoutedEventArgs e)
         {
-            if (operation != null)
+            if (equation.Text == "0")
             {
-                calculate();
-
+                equation.Text = tempNumber;
+            }
+            
+            if (hasResult)
+            {
+                equation.Text = subTotal.ToString();
+                hasResult = false;
             }
 
-            if (isAnswer == true)
-                subtotal = Convert.ToDecimal(txtDisplay.Text);
-
-            if (subtotal == 0)
-                subtotal = Convert.ToDecimal(input);
-            else
-                number = Convert.ToDecimal(input);
-            
-            input = null;
-            isComma = false;
-
-
-            Button button = sender as Button;
-            operation = button.Content.ToString();
-            txtDisplay.Text = txtDisplay.Text + " " + operation + " ";
+            tempNumber = null;
+            if (isInvalid == false)
+            {
+                Button button = sender as Button;
+                operation = button.Content.ToString();
+                equation.Text += operation;
+                hasOperator = true;
+                tempNumber = null;
+            }
         }
 
         private void calculate()
         {
-            switch (operation)
+            switch(operation)
             {
                 case "+":
-                    subtotal += number;
+                    subTotal += number;
                     break;
                 case "-":
-                    subtotal *= number;
-                    break;
-                case "/":
-                    subtotal /= number;
+                    subTotal -= number;
                     break;
                 case "*":
-                    subtotal *= number;
+                    subTotal *= number;
+                    break;
+                case "/":
+                    if (number == 0)
+                    {
+                        txtDisplay.Text = "Invalid operation";
+                        isInvalid = true;
+                    }
+                    else
+                        subTotal /= number;
                     break;
             }
-
+            equation.Text += txtDisplay.Text;
+            txtDisplay.Text = null;
+            number = 0;
             operation = null;
+            tempNumber = null;
+        }
+
+        private void ClearAll()
+        {
+            equation.Text = "0";
+            txtDisplay.Text = "0";
+            number = 0;
+            subTotal = 0;
+            operation = null;
+            tempNumber = null;
+            hasComma = false;
+            hasOperator = false;
+            hasResult = false;
+            isInvalid = false;
         }
     }
 }
