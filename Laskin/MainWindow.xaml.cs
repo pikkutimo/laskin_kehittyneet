@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,10 +24,12 @@ namespace Laskin
         List<string> operations = new List<string>();
         bool hasComma = false;
         bool digitsLocked = false;
+        bool hasResult = false;
+        bool isOperator = false;
         string tempValue = null;
         string operation = null;
-        double power = 2.0;
-
+        const double power = 2.0;
+        double subTotal = 0;
 
         public MainWindow()
         {
@@ -35,7 +38,7 @@ namespace Laskin
 
         private void btnClearEntry_Click(object sender, RoutedEventArgs e)
         {
-           
+            ClearAll();
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -53,6 +56,43 @@ namespace Laskin
 
         private void btnEquals_Click(object sender, RoutedEventArgs e)
         {
+            if(tempValue == null)
+                equation.Text += txtDisplay.Text;
+            
+            operations.Add(txtDisplay.Text);
+
+            if (hasResult == false && operations.Count > 2)
+            {
+                subTotal = Convert.ToDouble(operations.First());
+                debugDisplay.Text = subTotal.ToString();
+                operations.RemoveAt(0);
+
+                foreach (var operand in operations)
+                {
+                    if (isNumeric(operand))
+                    {
+                        tempValue = operand;
+                        debugDisplay.Text += operation;
+                        debugDisplay.Text += tempValue;
+                        Calculate();
+                    }
+                    else
+                    {
+                        operation = operand;
+                    }
+                }
+
+                txtDisplay.Text = subTotal.ToString();
+                hasResult = true;
+
+            }
+            else
+            {
+                equation.Text = txtDisplay.Text + operation + tempValue;
+                Calculate();
+                txtDisplay.Text = subTotal.ToString();
+            }
+            
             
         }
 
@@ -72,7 +112,40 @@ namespace Laskin
 
         private void btnPercent_Click(object sender, RoutedEventArgs e)
         {
-           
+            int index = operations.Count;
+            double tempDouble = 0;
+            string tempOperation = null;
+            string tempVariable = null;
+
+            if (index > 1)
+            {
+                //Let's remove the last operation and operands from the list
+                index--;
+                tempOperation = operations[index];
+                operations.RemoveAt(index);
+                index--;
+                tempVariable = operations[index];
+                operations.RemoveAt(index);
+
+                tempDouble = Convert.ToDouble(txtDisplay.Text) / 100 * Convert.ToDouble(tempVariable);
+                equation.Text = equation.Text.Substring(0, (equation.Text.Length - tempVariable.Length - tempOperation.Length));
+                tempValue = tempVariable + tempOperation + txtDisplay.Text + "%";
+            }
+            
+
+            if (tempOperation == "+")
+            {
+                txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) + tempDouble).ToString();
+            }
+            else if (tempOperation == "-")
+            {
+                txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) - tempDouble).ToString();
+            }
+            else
+            {
+                txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) * 0.01).ToString();
+            }
+
         }
 
         private void btn1x_Click(object sender, RoutedEventArgs e)
@@ -87,20 +160,28 @@ namespace Laskin
 
         private void btnPower_Click(object sender, RoutedEventArgs e)
         {
-            tempValue = txtDisplay.Text + "^2";
-            txtDisplay.Text =  Math.Pow(Convert.ToDouble(txtDisplay.Text), power).ToString();
-            digitsLocked = true;
+            if (txtDisplay.Text != "0")
+            {
+                tempValue = txtDisplay.Text + "^2";
+                txtDisplay.Text = Math.Pow(Convert.ToDouble(txtDisplay.Text), power).ToString();
+                digitsLocked = true;
+            }
         }
 
         private void btnSqrt_Click(object sender, RoutedEventArgs e)
         {
-            tempValue = "sqrt(" + txtDisplay.Text + ")";
-            txtDisplay.Text = (Math.Sqrt(Convert.ToDouble(txtDisplay.Text))).ToString();
-            digitsLocked = true;
+            if (txtDisplay.Text != "0")
+            {
+                tempValue = "sqrt(" + txtDisplay.Text + ")";
+                txtDisplay.Text = (Math.Sqrt(Convert.ToDouble(txtDisplay.Text))).ToString();
+                digitsLocked = true;
+            }
         }
 
         private void btnNo_Click(object sender, RoutedEventArgs e)
         {
+            isOperator = false;
+
             if (txtDisplay.Text == "0")
                 txtDisplay.Text = null;
 
@@ -125,41 +206,80 @@ namespace Laskin
         {
             digitsLocked = false;
 
-            if (tempValue != null)
-            {
-                operations.Add(tempValue);
-                equation.Text += tempValue;
-                tempValue = null;
-            }
-            else
+            if (isOperator == false)
             {
                 operations.Add(txtDisplay.Text);
-                equation.Text += txtDisplay.Text;
+                if (tempValue != null)
+                {
+                    equation.Text += tempValue;
+                    tempValue = null;
+                }
+                else if (hasResult)
+                {
+                    hasResult = false;
+                    equation.Text = txtDisplay.Text;
+                }
+                else
+                {
+                    equation.Text += txtDisplay.Text;
+                }
+
+                Button button = sender as Button;
+                operation = button.Content.ToString();
+
+                if (equation.Text == "0")
+                    equation.Text = null;
+
+                equation.Text += operation;
+                operations.Add(operation);
+
+                operation = null;
+                hasComma = false;
+                digitsLocked = false;
+                isOperator = true;
+                txtDisplay.Text = "0";
             }
-
-            Button button = sender as Button;
-            operation = button.Content.ToString();
-
-            if (equation.Text == "0")
-                equation.Text = null;
-
-            equation.Text += operation;
-            operations.Add(operation);
-
-            operation = null;
-            hasComma = false;
-            digitsLocked = false;
-            txtDisplay.Text = "0";
-        }
-
-        private void calculate()
-        {
-           
+            
         }
 
         private void ClearAll()
         {
-           
+            equation.Text = null;
+            debugDisplay.Text = null;
+            txtDisplay.Text = "0";
+            operations.Clear();
+            hasComma = false;
+            digitsLocked = false;
+            tempValue = null;
+            operation = null;
+            isOperator = false;
+        }
+
+        public static bool isNumeric(string s)
+        {
+            return int.TryParse(s, out int n);
+        }
+
+        private void Calculate()
+        {
+            switch(operation)
+            {
+                case "+":
+                    subTotal += Convert.ToDouble(tempValue);
+                    break;
+                case "-":
+                    subTotal -= Convert.ToDouble(tempValue);
+                    break;
+                case "*":
+                    subTotal *= Convert.ToDouble(tempValue);
+                    break;
+                case "/":
+                    // What about divide by zero?
+                    subTotal /= Convert.ToDouble(tempValue);
+                    break;
+            }
+
+            //operation = tempValue = null;
         }
     }
 }
