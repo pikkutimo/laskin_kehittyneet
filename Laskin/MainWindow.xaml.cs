@@ -21,29 +21,83 @@ namespace Laskin
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<string> operations = new List<string>();
-        bool hasComma = false;
-        bool digitsLocked = false;
-        bool hasResult = false;
-        bool isOperator = false;
-        string tempValue = null;
+        double input = 0;
+        double cache = 0;
         string operation = null;
-        const double power = 2.0;
-        double subTotal = 0;
+        bool hasResult = false;
+        bool hasPercent = false;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        private void btnNo_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+
+            if (txtDisplay.Text == "0")
+                txtDisplay.Text = button.Content.ToString();
+            else if (hasResult)
+            {
+                // If after pressing the equals sign and getting the result, the user start inputting new number
+                // => Clear everything
+                equationDisplay.Text = null;
+                input = 0;
+                operation = null;
+                hasResult = false;
+                txtDisplay.Text = button.Content.ToString();
+            }
+            else
+                txtDisplay.Text += button.Content.ToString();
+
+            hasPercent = false;
+        }
+
+        private void btnPosNeg_Click(object sender, RoutedEventArgs e)
+        {
+            if (hasResult)
+            {
+                txtDisplay.Text = (Convert.ToDouble(input) * -1.0).ToString();
+                equationDisplay.Text = null;
+                input = 0;
+                operation = null;
+                hasResult = false;
+            }
+            txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) * -1.0).ToString();
+        }
+
+        private void btnComma_Click(object sender, RoutedEventArgs e)
+        {
+            if (hasResult)
+            {
+                equationDisplay.Text = null;
+                input = 0;
+                operation = null;
+                hasResult = false;
+            }
+
+            if (txtDisplay.Text == "0")
+                txtDisplay.Text = "0";
+            else if (txtDisplay.Text.Contains("."))
+                txtDisplay.Text = txtDisplay.Text;
+            else
+                txtDisplay.Text += ".";
+        }
+
         private void btnClearEntry_Click(object sender, RoutedEventArgs e)
         {
-            ClearAll();
+            txtDisplay.Text = "0";
         }
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
+            // Clear everything
             txtDisplay.Text = "0";
+            operation = null;
+            equationDisplay.Text = null;
+            hasResult = false;
+            hasPercent = false;
         }
 
         private void btnBackspace_Click(object sender, RoutedEventArgs e)
@@ -51,235 +105,147 @@ namespace Laskin
             if (txtDisplay.Text.Length > 1)
                 txtDisplay.Text = txtDisplay.Text.Substring(0, txtDisplay.Text.Length - 1);
             else
-                txtDisplay.Text = "0";
+                txtDisplay.Text = null;
         }
 
         private void btnEquals_Click(object sender, RoutedEventArgs e)
         {
-            if(tempValue == null)
-                equation.Text += txtDisplay.Text;
-            
-            operations.Add(txtDisplay.Text);
+            equationDisplay.Text += operation;
 
-            if (hasResult == false && operations.Count > 2)
+            if (!hasResult)
             {
-                subTotal = Convert.ToDouble(operations.First());
-                debugDisplay.Text = subTotal.ToString();
-                operations.RemoveAt(0);
-
-                foreach (var operand in operations)
-                {
-                    if (isNumeric(operand))
-                    {
-                        tempValue = operand;
-                        debugDisplay.Text += operation;
-                        debugDisplay.Text += tempValue;
-                        Calculate();
-                    }
-                    else
-                    {
-                        operation = operand;
-                    }
-                }
-
-                txtDisplay.Text = subTotal.ToString();
-                hasResult = true;
-
+                cache = Convert.ToDouble(txtDisplay.Text);
+                equationDisplay.Text = equationDisplay.Text + txtDisplay.Text;
             }
             else
+                equationDisplay.Text = equationDisplay.Text + cache.ToString();
+
+            switch (operation)
             {
-                equation.Text = txtDisplay.Text + operation + tempValue;
-                Calculate();
-                txtDisplay.Text = subTotal.ToString();
+                case "+":
+                    input += cache;
+                    break;
+                case "-":
+                    input -= cache;
+                    break;
+                case "*":
+                    input *= cache;
+                    break;
+                case "/":
+                    input /= cache;
+                    break;
             }
-            
-            
-        }
 
-        private void btnPosNeg_Click(object sender, RoutedEventArgs e)
-        {
-            bool replace = false;
-
-            if (txtDisplay.Text.EndsWith("."))
-                replace = true;    
-
-            txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) * -1.0).ToString();
-
-            if (replace)
-                txtDisplay.Text += ".";
-            
+            txtDisplay.Text = input.ToString();
+            hasResult = true;
+            hasPercent = false;
         }
 
         private void btnPercent_Click(object sender, RoutedEventArgs e)
         {
-            int index = operations.Count;
-            double tempDouble = 0;
-            string tempOperation = null;
-            string tempVariable = null;
-
-            if (index > 1)
+            if (operation == null)
             {
-                //Let's remove the last operation and operands from the list
-                index--;
-                tempOperation = operations[index];
-                operations.RemoveAt(index);
-                index--;
-                tempVariable = operations[index];
-                operations.RemoveAt(index);
-
-                tempDouble = Convert.ToDouble(txtDisplay.Text) / 100 * Convert.ToDouble(tempVariable);
-                equation.Text = equation.Text.Substring(0, (equation.Text.Length - tempVariable.Length - tempOperation.Length));
-                tempValue = tempVariable + tempOperation + txtDisplay.Text + "%";
+                input = Convert.ToDouble(txtDisplay.Text) * 0.01;
+                equationDisplay.Text = txtDisplay.Text + "%";
+                txtDisplay.Text = input.ToString();
             }
-            
-
-            if (tempOperation == "+")
+            else if (!hasPercent)
             {
-                txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) + tempDouble).ToString();
-            }
-            else if (tempOperation == "-")
-            {
-                txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) - tempDouble).ToString();
-            }
-            else
-            {
-                txtDisplay.Text = (Convert.ToDouble(txtDisplay.Text) * 0.01).ToString();
-            }
 
+                switch (operation)
+                {
+                    case "+":
+                        input += Convert.ToDouble(txtDisplay.Text) / 100 * input;
+                        break;
+                    case "-":
+                        input -= Convert.ToDouble(txtDisplay.Text) / 100 * input;
+                        break;
+                    case "*":
+                        input *= Convert.ToDouble(txtDisplay.Text) / 100;
+                        break;
+                    case "/":
+                        input /= Convert.ToDouble(txtDisplay.Text) / 100;
+                        break;
+                }
+
+                equationDisplay.Text = equationDisplay.Text + operation + txtDisplay.Text + "%";
+                txtDisplay.Text = input.ToString();
+                hasPercent = true;
+                operation = null;
+            }
         }
 
         private void btn1x_Click(object sender, RoutedEventArgs e)
         {
-            if (txtDisplay.Text != "0")
+            if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
             {
-                tempValue = "1/" + txtDisplay.Text;
-                txtDisplay.Text = (1 / Convert.ToDouble(txtDisplay.Text)).ToString();
-                digitsLocked = true;
+                input = 1 / input;
+                equationDisplay.Text = "1/(" + equationDisplay.Text + ")";
+                txtDisplay.Text = Convert.ToString(input);
+            }
+            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
+            {
+                input = 1 / Convert.ToDouble(txtDisplay.Text);
+                equationDisplay.Text = "1/" + txtDisplay.Text;
+                txtDisplay.Text = Convert.ToString(input);
             }
         }
 
         private void btnPower_Click(object sender, RoutedEventArgs e)
         {
-            if (txtDisplay.Text != "0")
+            if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
             {
-                tempValue = txtDisplay.Text + "^2";
-                txtDisplay.Text = Math.Pow(Convert.ToDouble(txtDisplay.Text), power).ToString();
-                digitsLocked = true;
+                input = Math.Pow(input, 2.0);
+                equationDisplay.Text = "(" + equationDisplay.Text + ")^2";
+                txtDisplay.Text = Convert.ToString(input);
+            }
+            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
+            {
+                input = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
+                equationDisplay.Text = txtDisplay.Text + "^2";
+                txtDisplay.Text = Convert.ToString(input);
             }
         }
 
         private void btnSqrt_Click(object sender, RoutedEventArgs e)
         {
-            if (txtDisplay.Text != "0")
+            if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
             {
-                tempValue = "sqrt(" + txtDisplay.Text + ")";
-                txtDisplay.Text = (Math.Sqrt(Convert.ToDouble(txtDisplay.Text))).ToString();
-                digitsLocked = true;
+                input = Math.Sqrt(input);
+                equationDisplay.Text = "sqrt(" + equationDisplay.Text + ")";
+                txtDisplay.Text = Convert.ToString(input);
             }
-        }
-
-        private void btnNo_Click(object sender, RoutedEventArgs e)
-        {
-            isOperator = false;
-
-            if (txtDisplay.Text == "0")
-                txtDisplay.Text = null;
-
-            if (digitsLocked != true)
+            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
             {
-                Button button = sender as Button;
-                txtDisplay.Text += button.Content.ToString();
-            }
-        }
-
-        private void btnComma_Click(object sender, RoutedEventArgs e)
-        {
-            if (hasComma == false && digitsLocked == false)
-            {
-                Button button = sender as Button;
-                txtDisplay.Text += button.Content.ToString();
-                hasComma = true;
+                input = Math.Sqrt(Convert.ToDouble(txtDisplay.Text));
+                equationDisplay.Text = "sqrt(" + txtDisplay.Text + ")";
+                txtDisplay.Text = Convert.ToString(input);
             }
         }
 
         private void btnArithmetic_Click(object sender, RoutedEventArgs e)
         {
-            digitsLocked = false;
+            Button button = sender as Button;
 
-            if (isOperator == false)
+            if (operation == null && txtDisplay.Text != null)
             {
-                operations.Add(txtDisplay.Text);
-                if (tempValue != null)
-                {
-                    equation.Text += tempValue;
-                    tempValue = null;
-                }
-                else if (hasResult)
-                {
-                    hasResult = false;
-                    equation.Text = txtDisplay.Text;
-                }
-                else
-                {
-                    equation.Text += txtDisplay.Text;
-                }
-
-                Button button = sender as Button;
+                equationDisplay.Text = txtDisplay.Text;
+                input = Convert.ToDouble(txtDisplay.Text);
                 operation = button.Content.ToString();
-
-                if (equation.Text == "0")
-                    equation.Text = null;
-
-                equation.Text += operation;
-                operations.Add(operation);
-
-                operation = null;
-                hasComma = false;
-                digitsLocked = false;
-                isOperator = true;
-                txtDisplay.Text = "0";
+                //equationDisplay.Text += operation;
             }
-            
-        }
-
-        private void ClearAll()
-        {
-            equation.Text = null;
-            debugDisplay.Text = null;
-            txtDisplay.Text = "0";
-            operations.Clear();
-            hasComma = false;
-            digitsLocked = false;
-            tempValue = null;
-            operation = null;
-            isOperator = false;
-        }
-
-        public static bool isNumeric(string s)
-        {
-            return int.TryParse(s, out int n);
-        }
-
-        private void Calculate()
-        {
-            switch(operation)
+            else if (operation != null && hasResult)
             {
-                case "+":
-                    subTotal += Convert.ToDouble(tempValue);
-                    break;
-                case "-":
-                    subTotal -= Convert.ToDouble(tempValue);
-                    break;
-                case "*":
-                    subTotal *= Convert.ToDouble(tempValue);
-                    break;
-                case "/":
-                    // What about divide by zero?
-                    subTotal /= Convert.ToDouble(tempValue);
-                    break;
+                equationDisplay.Text = input.ToString();
+                hasResult = false;
+                operation = button.Content.ToString();
+                //equationDisplay.Text += operation;
             }
+     
+            txtDisplay.Text = "0";
 
-            //operation = tempValue = null;
         }
+
+       
     }
 }
