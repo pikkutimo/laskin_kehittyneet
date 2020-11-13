@@ -28,3 +28,7 @@ C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\Laskin.csproj.Genera
 C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\Laskin.csproj.CoreCompileInputs.cache
 C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\Laskin.exe
 C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\Laskin.pdb
+C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\ScientificWindow.g.cs
+C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\ScientificWindow.baml
+C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\TemperatureWindow.g.cs
+C:\Users\pikku\Projects\laskin_kehittyneet\Laskin\obj\Debug\TemperatureWindow.baml

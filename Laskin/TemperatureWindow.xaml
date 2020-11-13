@@ -1,0 +1,52 @@
+﻿<Window x:Class="Laskin.TemperatureWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Laskin"
+        mc:Ignorable="d"
+        Title="TemperatureWindow" Height="300" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.ColumnSpan="6" Grid.RowSpan="2">
+            <Menu DockPanel.Dock="Top" Background="Transparent">
+                <MenuItem Header="≡" Width="40" FontWeight="Bold">
+                    <MenuItem Header="_Standard" Click="MenuStandardClick" />
+                    <MenuItem Header="_Scientific" Click="MenuScientificClick" />
+                    <MenuItem Header="_Temperature" Click="MenuTemperatureClick"/>
+                    <Separator />
+                    <MenuItem Header="_Exit" Click="MenuExitClick"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <TextBlock Name="Celcius" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Padding="4" TextWrapping="Wrap" FontSize="30">
+            ℃
+        </TextBlock>
+        <TextBox Name="InCelcius" TextAlignment="Left" FontSize="30" MaxLength="9" Padding="5" Grid.Row="1" Grid.Column="2"  Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="1">0</TextBox>
+        <Button x:Name="ConvertToFahrenheit" Content="↻" Grid.Row="1" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnToFahrenheit_Click"></Button>
+        <TextBlock Name="Fahrenheit" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"  Padding="4" TextWrapping="Wrap" FontSize="30">
+            ℉
+        </TextBlock>
+        <TextBox Name="InFahrenheit" TextAlignment="Left" FontSize="30" MaxLength="9" Padding="5" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="1">0</TextBox>
+        <Button x:Name="ConvertToCelcius" Content="↻" Grid.Row="3" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnToCelcius_Click"></Button>
+    </Grid>
+</Window>

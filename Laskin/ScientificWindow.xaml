@@ -1,0 +1,128 @@
+﻿<Window x:Class="Laskin.ScientificWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Laskin"
+        mc:Ignorable="d"
+        Title="ScientificWindow" Height="500" Width="480">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.ColumnSpan="6" Grid.RowSpan="2">
+            <Menu DockPanel.Dock="Top" Background="Transparent">
+                <MenuItem Header="≡" Width="40" FontWeight="Bold">
+                    <MenuItem Header="_Standard" Click="MenuStandardClick" />
+                    <MenuItem Header="_Scientific" Click="MenuScientificClick" />
+                    <MenuItem Header="_Temperature" Click="MenuTemperatureClick"/>
+                    <Separator />
+                    <MenuItem Header="_Exit" Click="MenuExitClick"/>
+                </MenuItem>
+            </Menu>
+            <Separator/>
+            <StackPanel>
+                <TextBox x:Name="equationDisplay" IsReadOnly="true" TextAlignment="right" VerticalAlignment="Top" BorderThickness="0" FontSize="12" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6"></TextBox>
+                <TextBox x:Name="txtDisplay" IsReadOnly="true" TextAlignment="right" VerticalAlignment="Bottom" BorderThickness="0" FontSize="25" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6">0</TextBox>
+            </StackPanel>
+        </DockPanel>
+        <!--Number buttons -->
+        <Button x:Name="btn7" Content="7" Grid.Row="3" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+        <Button x:Name="btn8" Content="8" Grid.Row="3" Grid.Column="1" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+        <Button x:Name="btn9" Content="9" Grid.Row="3" Grid.Column="2" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+
+        <Button x:Name="btn4" Content="4" Grid.Row="4" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+        <Button x:Name="btn5" Content="5" Grid.Row="4" Grid.Column="1" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+        <Button x:Name="btn6" Content="6" Grid.Row="4" Grid.Column="2" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+
+        <Button x:Name="btn1" Content="1" Grid.Row="5" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+        <Button x:Name="btn2" Content="2" Grid.Row="5" Grid.Column="1" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+        <Button x:Name="btn3" Content="3" Grid.Row="5" Grid.Column="2" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+
+        <Button x:Name="btn0" Content="0" Grid.Row="6" Grid.Column="1" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="DemiBold" Click="btnNo_Click"></Button>
+
+        <!--Comma Button-->
+        <Button x:Name="btnComma" Content="." Grid.Row="6" Grid.Column="2" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnComma_Click"></Button>
+
+        <!--Math Buttons-->
+        <Button x:Name="btnPlus" Content="+" Grid.Row="2" Grid.Column="3" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnArithmetic_Click"></Button>
+        <Button x:Name="btnMinus" Content="-" Grid.Row="3" Grid.Column="3" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnArithmetic_Click"></Button>
+        <Button x:Name="btnTimes" Content="*" Grid.Row="4" Grid.Column="3" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnArithmetic_Click"></Button>
+        <Button x:Name="btnDivide" Content="/" Grid.Row="5" Grid.Column="3" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnArithmetic_Click"></Button>
+        <Button x:Name="btnEquals" Grid.Row="6" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnEquals_Click">=</Button>
+
+        <!--Clear Buttons-->
+        <Button x:Name="btnClearEntry" Grid.Row="2" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnClearEntry_Click">CE</Button>
+        <Button x:Name="btnClear" Grid.Row="2" Grid.Column="1" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnClear_Click">C</Button>
+        <Button x:Name="btnBackspace" Grid.Row="2" Grid.Column="2" Content="⌫" HorizontalAlignment="Left" Width="78" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnBackspace_Click" RenderTransformOrigin="0.412,-0.699"></Button>
+
+        <!--Pos/Neg Button-->
+        <Button x:Name="btnPosNeg" Grid.Row="6" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnPosNeg_Click">∓</Button>
+
+        <!--Percent Button -->
+        <Button x:Name="btnPercent" Grid.Row="1" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnPercent_Click">%</Button>
+
+        <!--Pi Button -->
+        <Button x:Name="btnPi" Grid.Row="1" Grid.Column="4" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnPi_Click">PI</Button>
+
+        <!--Mod Button -->
+        <Button x:Name="btnMod" Content="mod" Grid.Row="1" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnArithmetic_Click"></Button>
+
+        <!--Exponent Button -->
+        <Button x:Name="btnExponent" Content="^" Grid.Row="6" Grid.Column="3" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnArithmetic_Click"></Button>
+
+        <!--n! Button -->
+        <Button x:Name="btnFactorial" Grid.Row="6" Grid.Column="4" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnFactorial_Click">n!</Button>
+        
+        <!-- Log Button -->
+        <Button x:Name="btnLog" Grid.Row="2" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnLog_Click">LOG</Button>
+        
+        <!--Ln Button -->
+        <Button x:Name="btnLn" Grid.Row="2" Grid.Column="4" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnLn_Click">LN</Button>
+
+        <!--Sin Button -->
+        <Button x:Name="btnSin" Content="SIN" Grid.Row="3" Grid.Column="4" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnTrigonometry_Click"></Button>
+
+        <!--Cos Button -->
+        <Button x:Name="btnCos" Content="COS" Grid.Row="4" Grid.Column="4" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnTrigonometry_Click"></Button>
+
+        <!--Tan Button -->
+        <Button x:Name="btnTan" Content="TAN" Grid.Row="5" Grid.Column="4" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnTrigonometry_Click"></Button>
+
+        <!--Arcsin Button -->
+        <Button x:Name="btnArcsin" Content="ArcSIN" Grid.Row="3" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnTrigonometry_Click"></Button>
+
+        <!--Arctan Button -->
+        <Button x:Name="btnArctan" Content="ArcTAN" Grid.Row="4" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnTrigonometry_Click"></Button>
+
+        <!--Arccos Button -->
+        <Button x:Name="btnArccos" Content="ArcCOS" Grid.Row="5" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnTrigonometry_Click"></Button>
+        
+        <!--1/x Button -->
+
+        <Button x:Name="btn1x" Grid.Row="1" Grid.Column="1" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btn1x_Click">1/x</Button>
+
+        <!--Power Button -->
+        <Button x:Name="btnPower" Grid.Row="1" Grid.Column="2" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnPower_Click">x²</Button>
+
+        <!--Sqrt Button -->
+        <Button x:Name="btnSqrt" Content="⎷" Grid.Row="1" Grid.Column="3" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnSqrt_Click"></Button>
+
+    </Grid>
+</Window>

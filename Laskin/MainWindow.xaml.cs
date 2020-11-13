@@ -21,6 +21,10 @@ namespace Laskin
     /// </summary>
     public partial class MainWindow : Window
     {
+        /*
+         * To review:
+         * - operations with multiple power, sqrt etc.
+         */
         double input = 0;
         double cache = 0;
         string operation = null;
@@ -110,33 +114,8 @@ namespace Laskin
 
         private void btnEquals_Click(object sender, RoutedEventArgs e)
         {
-            equationDisplay.Text += operation;
+            Calculate();
 
-            if (!hasResult)
-            {
-                cache = Convert.ToDouble(txtDisplay.Text);
-                equationDisplay.Text = equationDisplay.Text + txtDisplay.Text;
-            }
-            else
-                equationDisplay.Text = equationDisplay.Text + cache.ToString();
-
-            switch (operation)
-            {
-                case "+":
-                    input += cache;
-                    break;
-                case "-":
-                    input -= cache;
-                    break;
-                case "*":
-                    input *= cache;
-                    break;
-                case "/":
-                    input /= cache;
-                    break;
-            }
-
-            txtDisplay.Text = input.ToString();
             hasResult = true;
             hasPercent = false;
         }
@@ -173,6 +152,37 @@ namespace Laskin
                 hasPercent = true;
                 operation = null;
             }
+        }
+
+        private void Calculate()
+        {
+            equationDisplay.Text += operation;
+
+            if (!hasResult)
+            {
+                cache = Convert.ToDouble(txtDisplay.Text);
+                equationDisplay.Text = equationDisplay.Text + txtDisplay.Text;
+            }
+            else
+                equationDisplay.Text = equationDisplay.Text + cache.ToString();
+
+            switch (operation)
+            {
+                case "✚":
+                    input += cache;
+                    break;
+                case "➖":
+                    input -= cache;
+                    break;
+                case "❌":
+                    input *= cache;
+                    break;
+                case "➗":
+                    input /= cache;
+                    break;
+            }
+
+            txtDisplay.Text = input.ToString();
         }
 
         private void btn1x_Click(object sender, RoutedEventArgs e)
@@ -241,11 +251,40 @@ namespace Laskin
                 operation = button.Content.ToString();
                 //equationDisplay.Text += operation;
             }
+            else
+            {
+                //If there is already input & operation and the user presses arithmetic operator again
+                // => calculate the existing operation as input
+                Calculate();
+                operation = button.Content.ToString();
+            }
      
             txtDisplay.Text = "0";
 
         }
 
-       
+        private void MenuScientificClick(object sender, RoutedEventArgs e)
+        {
+            ScientificWindow science = new ScientificWindow();
+            science.Show();
+            Close();
+        }
+
+        private void MenuStandardClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MenuTemperatureClick(object sender, RoutedEventArgs e)
+        {
+            TemperatureWindow temperature = new TemperatureWindow();
+            temperature.Show();
+            Close();
+        }
+
+        private void MenuExitClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }
