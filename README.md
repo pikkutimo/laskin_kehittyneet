@@ -1,4 +1,4 @@
-# H1 Calculator
+# Calculator
 
 Calculator done as a project for one of my courses.
 Other participants in the project:
