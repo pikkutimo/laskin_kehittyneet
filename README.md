@@ -3,9 +3,9 @@
 Calculator done as a project for one of my courses.
 Other participants in the project:
 
-Henri Kemppainen
-Tero Lahti
-Nelle Pelkonen
+- Henri Kemppainen
+- Tero Lahti
+- Nelle Pelkonen
 
 ![Standard calculator](/Images/Standard.png)
 
