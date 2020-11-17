@@ -214,7 +214,7 @@ namespace Laskin
 
         private void btn1x_Click(object sender, RoutedEventArgs e)
         {
-             if (operation != null)
+            if (operation != null)
             {
                 //cache = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
                 equationDisplay.Text = temp + operation + "1/" + txtDisplay.Text;
