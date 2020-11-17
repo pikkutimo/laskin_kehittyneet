@@ -171,6 +171,10 @@ namespace Laskin
             {
                 cache = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
             }
+            else if (equationDisplay.Text.Contains("sqrt"))
+            {
+                cache = Math.Sqrt(Convert.ToDouble(txtDisplay.Text));
+            }
             else if (hasPerX)
             {
                 equationDisplay.Text = temp;
@@ -243,12 +247,12 @@ namespace Laskin
                 Calculate();
                 operation = null;
             }
-            else if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
+            /*else if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
             {
                 input = Math.Pow(input, 2.0);
                 equationDisplay.Text = "(" + equationDisplay.Text + ")^2";
                 txtDisplay.Text = Convert.ToString(input);     
-            }
+            }*/
             else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
             {
                 input = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
@@ -259,7 +263,14 @@ namespace Laskin
 
         private void btnSqrt_Click(object sender, RoutedEventArgs e)
         {
-            if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
+            if (operation != null)
+            {
+                temp = equationDisplay.Text;
+                equationDisplay.Text = temp + operation + "sqrt(" + txtDisplay.Text + ")";
+                Calculate();
+                operation = null;
+            }
+            else if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
             {
                 input = Math.Sqrt(input);
                 equationDisplay.Text = "sqrt(" + equationDisplay.Text + ")";
@@ -277,7 +288,7 @@ namespace Laskin
         {
             Button button = sender as Button;
 
-            if (equationDisplay.Text.Contains("1/"))
+            if (equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
             {
                 temp = equationDisplay.Text;
             }
