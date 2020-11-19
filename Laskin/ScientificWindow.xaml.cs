@@ -386,7 +386,14 @@ namespace Laskin
 
         private void btnFactorial_Click(object sender, RoutedEventArgs e)
         {
+            if (txtDisplay.Text.Contains(".") || txtDisplay.Text.Contains("-") || txtDisplay.Text == "0")
+            {
 
+            }
+            else 
+            {
+                txtDisplay.Text = Convert.ToString(factorial(Convert.ToInt32(txtDisplay.Text)));
+            }
         }
 
         private void btnTrigonometry_Click(object sender, RoutedEventArgs e)
@@ -424,6 +431,14 @@ namespace Laskin
                 txtDisplay.Text = Convert.ToString(input);
                 trigOperation = null;
             }
+        }
+
+        long factorial(int number)
+        {
+            if (number == 1)
+                return 1;
+            else
+                return number * factorial(number - 1);
         }
     }
 }
