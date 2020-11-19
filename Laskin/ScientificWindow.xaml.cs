@@ -22,11 +22,9 @@ namespace Laskin
         double input = 0;
         double cache = 0;
         string operation = null;
-        string temp = null;
         string trigOperation = null;
         bool hasResult = false;
-        bool hasPercent = false;
-        bool hasPerX = false;
+        bool hasCache = false;
 
         public ScientificWindow()
         {
@@ -51,8 +49,6 @@ namespace Laskin
             }
             else
                 txtDisplay.Text += button.Content.ToString();
-
-            hasPercent = false;
         }
 
         private void btnPosNeg_Click(object sender, RoutedEventArgs e)
@@ -79,7 +75,7 @@ namespace Laskin
             }
 
             if (txtDisplay.Text == "0")
-                txtDisplay.Text = "0";
+                txtDisplay.Text = "0.";
             else if (txtDisplay.Text.Contains("."))
                 txtDisplay.Text = txtDisplay.Text;
             else
@@ -95,30 +91,31 @@ namespace Laskin
         {
             // Clear everything
             txtDisplay.Text = "0";
+            input = 0;
+            cache = 0;
             operation = null;
             equationDisplay.Text = null;
             hasResult = false;
-            hasPercent = false;
+            hasCache = false;
         }
 
         private void btnBackspace_Click(object sender, RoutedEventArgs e)
         {
-            if (txtDisplay.Text.Length > 1)
+            if(txtDisplay.Text.Length > 1)
                 txtDisplay.Text = txtDisplay.Text.Substring(0, txtDisplay.Text.Length - 1);
             else
-                txtDisplay.Text = null;
+                txtDisplay.Text = "0";
         }
 
         private void btnEquals_Click(object sender, RoutedEventArgs e)
         {
-            if (txtDisplay.Text.Length > 0)
+            if (txtDisplay.Text != "0")
             {
                 //3.
                 // You can't crash the program by erasing txtDisplay.Text
                 Calculate();
                 hasResult = true;
-                hasPercent = false;
-                hasPerX = false;
+                txtDisplay.Text = input.ToString();
             }
         }
 
@@ -130,9 +127,8 @@ namespace Laskin
                 equationDisplay.Text = txtDisplay.Text + "%";
                 txtDisplay.Text = input.ToString();
             }
-            else if (!hasPercent)
+            else
             {
-
                 switch (operation)
                 {
                     case "+":
@@ -149,43 +145,23 @@ namespace Laskin
                         break;
                 }
 
-                equationDisplay.Text = equationDisplay.Text + operation + txtDisplay.Text + "%";
+                equationDisplay.Text = equationDisplay.Text + txtDisplay.Text + "%";
                 txtDisplay.Text = input.ToString();
-                hasPercent = true;
+                hasResult = true;
                 operation = null;
             }
         }
 
         private void Calculate()
         {
-            if (equationDisplay.Text.Contains("%"))
-                //2.
-                //If %-sign present do not add the to anywhere 
-                equationDisplay.Text += operation;
-            else if (equationDisplay.Text.Contains("^2"))
+            if (input == 0)
+                equationDisplay.Text = null;
+
+            if (!hasCache)
             {
-                cache = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
-            }
-            else if (equationDisplay.Text.Contains("sqrt"))
-            {
-                cache = Math.Sqrt(Convert.ToDouble(txtDisplay.Text));
-            }
-            else if (hasPerX)
-            {
-                equationDisplay.Text = temp;
-                cache = 1 / Convert.ToDouble(txtDisplay.Text);
-                temp = "1/" + txtDisplay.Text;
-                equationDisplay.Text = equationDisplay.Text + operation + temp;
-                hasPerX = false;
-            }
-            else if (!hasResult)
-            {
-                equationDisplay.Text += operation;
                 cache = Convert.ToDouble(txtDisplay.Text);
                 equationDisplay.Text += txtDisplay.Text;
             }
-            else
-                equationDisplay.Text = equationDisplay.Text + operation + cache.ToString();
 
             switch (operation)
             {
@@ -210,31 +186,24 @@ namespace Laskin
                     break;
             }
 
-            txtDisplay.Text = input.ToString();
         }
 
         private void btn1x_Click(object sender, RoutedEventArgs e)
         {
             if (operation != null)
             {
-                //cache = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
-                equationDisplay.Text = temp + operation + "1/" + txtDisplay.Text;
+                equationDisplay.Text = equationDisplay.Text + "1/" + txtDisplay.Text;
+                cache = 1 / Convert.ToDouble(txtDisplay.Text);
+                hasCache = true;
                 Calculate();
+                txtDisplay.Text = Convert.ToString(cache);
                 operation = null;
-                hasPerX = false;
             }
-            /*else if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
-            {
-                input = 1 / input;
-                equationDisplay.Text = "1/(" + equationDisplay.Text + ")";
-                txtDisplay.Text = Convert.ToString(input);
-            }*/
-            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
+            else
             {
                 input = 1 / Convert.ToDouble(txtDisplay.Text);
-                equationDisplay.Text = "1/" + txtDisplay.Text;
+                equationDisplay.Text = equationDisplay.Text + "1/" + txtDisplay.Text;
                 txtDisplay.Text = Convert.ToString(input);
-                hasPerX = true;
             }
         }
 
@@ -242,19 +211,14 @@ namespace Laskin
         {
             if (operation != null)
             {
-                temp = equationDisplay.Text;
-                //cache = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
-                equationDisplay.Text = temp + operation + "(" + txtDisplay.Text + ")^2";
+                equationDisplay.Text = equationDisplay.Text + txtDisplay.Text + "^2";
+                cache = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
+                txtDisplay.Text = Convert.ToString(cache);
+                hasCache = true;
                 Calculate();
                 operation = null;
             }
-            /*else if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
-            {
-                input = Math.Pow(input, 2.0);
-                equationDisplay.Text = "(" + equationDisplay.Text + ")^2";
-                txtDisplay.Text = Convert.ToString(input);     
-            }*/
-            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
+            else
             {
                 input = Math.Pow(Convert.ToDouble(txtDisplay.Text), 2.0);
                 equationDisplay.Text = txtDisplay.Text + "^2";
@@ -266,18 +230,14 @@ namespace Laskin
         {
             if (operation != null)
             {
-                temp = equationDisplay.Text;
-                equationDisplay.Text = temp + operation + "sqrt(" + txtDisplay.Text + ")";
+                equationDisplay.Text = equationDisplay.Text + "sqrt(" + txtDisplay.Text + ")";
+                cache = Math.Sqrt(Convert.ToDouble(txtDisplay.Text));
+                hasCache = true;
+                txtDisplay.Text = Convert.ToString(cache);
                 Calculate();
                 operation = null;
             }
-            else if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
-            {
-                input = Math.Sqrt(input);
-                equationDisplay.Text = "sqrt(" + equationDisplay.Text + ")";
-                txtDisplay.Text = Convert.ToString(input);
-            }
-            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
+            else
             {
                 input = Math.Sqrt(Convert.ToDouble(txtDisplay.Text));
                 equationDisplay.Text = "sqrt(" + txtDisplay.Text + ")";
@@ -289,35 +249,26 @@ namespace Laskin
         {
             Button button = sender as Button;
 
-            if (equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt"))
-            {
-                temp = equationDisplay.Text;
-            }
-            else if (operation == null && txtDisplay.Text != null)
+            if (operation == null)
             {
                 equationDisplay.Text = txtDisplay.Text;
                 input = Convert.ToDouble(txtDisplay.Text);
-                //operation = button.Content.ToString();
-                //equationDisplay.Text += operation;
             }
-            else if (operation != null && hasResult)
+            else if (hasResult)
             {
                 equationDisplay.Text = input.ToString();
                 hasResult = false;
-                //operation = button.Content.ToString();
-                //equationDisplay.Text += operation;
             }
             else
             {
                 //If there is already input & operation and the user presses arithmetic operator again
                 // => calculate the existing operation as input
                 Calculate();
-                //operation = button.Content.ToString();
             }
 
             operation = button.Content.ToString();
+            equationDisplay.Text += operation;
             txtDisplay.Text = "0";
-
         }
 
         private void MenuScientificClick(object sender, RoutedEventArgs e)
@@ -346,29 +297,35 @@ namespace Laskin
 
         private void btnLn_Click(object sender, RoutedEventArgs e)
         {
-            if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt") || equationDisplay.Text.Contains("log"))
+            if (operation != null)
             {
-                input = Math.Log(input);
-                equationDisplay.Text = "log(" + equationDisplay.Text + ")";
-                txtDisplay.Text = Convert.ToString(input);
+                equationDisplay.Text = equationDisplay.Text + "ln(" + txtDisplay.Text + ")";
+                cache = Math.Log(Convert.ToDouble(txtDisplay.Text));
+                hasCache = true;
+                txtDisplay.Text = Convert.ToString(cache);
+                Calculate();
+                operation = null;
             }
-            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
+            else
             {
                 input = Math.Log(Convert.ToDouble(txtDisplay.Text));
-                equationDisplay.Text = "log(" + txtDisplay.Text + ")";
+                equationDisplay.Text = "ln(" + txtDisplay.Text + ")";
                 txtDisplay.Text = Convert.ToString(input);
             }
         }
 
         private void btnLog_Click(object sender, RoutedEventArgs e)
         {
-            if (equationDisplay.Text.Contains("^2") || equationDisplay.Text.Contains("1/") || equationDisplay.Text.Contains("sqrt") || equationDisplay.Text.Contains("log"))
+            if (operation != null)
             {
-                input = Math.Log(input, 10);
-                equationDisplay.Text = "log(" + equationDisplay.Text + ")";
-                txtDisplay.Text = Convert.ToString(input);
+                equationDisplay.Text = equationDisplay.Text + "log(" + txtDisplay.Text + ")";
+                cache = Math.Log(Convert.ToDouble(txtDisplay.Text), 10);
+                hasCache = true;
+                txtDisplay.Text = Convert.ToString(cache);
+                Calculate();
+                operation = null;
             }
-            else if (txtDisplay.Text != "0" && txtDisplay.Text != null)
+            else
             {
                 input = Math.Log(Convert.ToDouble(txtDisplay.Text), 10);
                 equationDisplay.Text = "log(" + txtDisplay.Text + ")";
@@ -392,6 +349,7 @@ namespace Laskin
             }
             else 
             {
+                equationDisplay.Text = equationDisplay.Text + txtDisplay.Text + "!";
                 txtDisplay.Text = Convert.ToString(factorial(Convert.ToInt32(txtDisplay.Text)));
             }
         }
@@ -401,36 +359,51 @@ namespace Laskin
             Button button = sender as Button;
             trigOperation = button.Content.ToString();
 
-            if (equationDisplay.Text == "")
+            switch (trigOperation)
             {
-                input = Convert.ToDouble(txtDisplay.Text);
+                case "SIN":
+                    cache = Math.Sin(Convert.ToDouble(txtDisplay.Text));
+                    break;
+                case "TAN":
+                    cache = Math.Tan(Convert.ToDouble(txtDisplay.Text));
+                    break;
+                case "COS":
+                    cache = Math.Cos(Convert.ToDouble(txtDisplay.Text));
+                    break;
+                case "ArcSIN":
+                    cache = Math.Asin(Convert.ToDouble(txtDisplay.Text));
+                    break;
+                case "ArcTAN":
+                    cache = Math.Atan(Convert.ToDouble(txtDisplay.Text));
+                    break;
+                case "ArcCOS":
+                    cache = Math.Acos(Convert.ToDouble(txtDisplay.Text));
+                    break;
+            }
 
-                switch (trigOperation)
-                {
-                    case "SIN":
-                        input = Math.Sin(input);
-                        break;
-                    case "TAN":
-                        input = Math.Tan(input);
-                        break;
-                    case "COS":
-                        input = Math.Cos(input);
-                        break;
-                    case "ArcSIN":
-                        input = Math.Asin(input);
-                        break;
-                    case "ArcTAN":
-                        input = Math.Atan(input);
-                        break;
-                    case "ArcCOS":
-                        input = Math.Acos(input);
-                        break;
-                }
+            if (operation != null)
+            {
+                equationDisplay.Text = equationDisplay.Text + trigOperation + "(" + txtDisplay.Text + ")";
+                hasCache = true;
+                txtDisplay.Text = Convert.ToString(cache);
+                Calculate();
+                operation = null;
+            }
+            else
+            {
+                input = cache;
+                equationDisplay.Text = trigOperation + "(" + txtDisplay.Text + ")";
+                txtDisplay.Text = Convert.ToString(input);
+            }
+
+            /*if (operation != null)
+            {
+                
 
                 equationDisplay.Text = trigOperation + "(" +  txtDisplay.Text + ")";
                 txtDisplay.Text = Convert.ToString(input);
                 trigOperation = null;
-            }
+            }*/
         }
 
         long factorial(int number)
