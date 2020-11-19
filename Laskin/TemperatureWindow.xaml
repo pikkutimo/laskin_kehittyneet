@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Laskin"
         mc:Ignorable="d"
-        Title="TemperatureWindow" Height="300" Width="400">
+        Title="TemperatureWindow" Height="450" Width="400">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -23,7 +23,8 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <DockPanel Grid.ColumnSpan="6" Grid.RowSpan="2">
@@ -42,11 +43,16 @@
             ℃
         </TextBlock>
         <TextBox Name="InCelcius" TextAlignment="Left" FontSize="30" MaxLength="9" Padding="5" Grid.Row="1" Grid.Column="2"  Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="1">0</TextBox>
-        <Button x:Name="ConvertToFahrenheit" Content="↻" Grid.Row="1" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnToFahrenheit_Click"></Button>
+        <Button x:Name="ConvertFromCelcius" Content="↻" Grid.Row="1" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnFromCelcius_Click"/>
         <TextBlock Name="Fahrenheit" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"  Padding="4" TextWrapping="Wrap" FontSize="30">
             ℉
         </TextBlock>
         <TextBox Name="InFahrenheit" TextAlignment="Left" FontSize="30" MaxLength="9" Padding="5" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="1">0</TextBox>
-        <Button x:Name="ConvertToCelcius" Content="↻" Grid.Row="3" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnToCelcius_Click"></Button>
+        <Button x:Name="ConvertFromFahrenheit" Content="↻" Grid.Row="3" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnFromFahrenheit_Click"></Button>
+        <TextBlock Name="Kelvin" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"  Padding="4" TextWrapping="Wrap" FontSize="30">
+            K
+        </TextBlock>
+        <TextBox Name="InKelvin" TextAlignment="Left" FontSize="30" MaxLength="9" Padding="5" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="1">0</TextBox>
+        <Button x:Name="ConvertFromKelvin" Content="↻" Grid.Row="5" Grid.Column="5" BorderBrush="Transparent" BorderThickness="0" FontSize="22" FontWeight="Light" Click="btnFromKelvin_Click"></Button>
     </Grid>
 </Window>

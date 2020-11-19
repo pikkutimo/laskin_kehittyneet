@@ -49,20 +49,57 @@ namespace Laskin
 
         }
 
-        private void btnToFahrenheit_Click(object sender, RoutedEventArgs e)
+        private void btnFromCelcius_Click(object sender, RoutedEventArgs e)
         {
             if (InFahrenheit.Text != null)
                 InFahrenheit.Text = null;
+            if (InKelvin.Text != null)
+                InKelvin.Text = null;
+
             input = Convert.ToDouble(InCelcius.Text);
             InFahrenheit.Text = (Math.Round((input * 9 / 5 + 32), 2)).ToString();
+
+            if (input > -273.15)
+                InKelvin.Text = (input + 273.15).ToString();
+            else
+                InKelvin.Text = "Invalid";
         }
 
-        private void btnToCelcius_Click(object sender, RoutedEventArgs e)
+        private void btnFromFahrenheit_Click(object sender, RoutedEventArgs e)
         {
             if (InCelcius.Text != null)
                 InCelcius.Text = null;
+            if (InKelvin.Text != null)
+                InKelvin.Text = null;
+
             input = Convert.ToDouble(InFahrenheit.Text);
             InCelcius.Text = Math.Round(((input - 32) * 5 / 9), 2).ToString();
+
+            if (input > -459.67)
+                InKelvin.Text = ((input + 459.67) * 5 / 9).ToString();
+            else
+                InKelvin.Text = "Invalid";
+        }
+
+        private void btnFromKelvin_Click(object sender, RoutedEventArgs e)
+        {
+            if (InCelcius.Text != null)
+                InCelcius.Text = null;
+            if (InFahrenheit.Text != null)
+                InFahrenheit.Text = null;
+
+            input = Convert.ToDouble(InKelvin.Text);
+
+            if (input < 0)
+            {
+                InCelcius.Text = "Invalid";
+                InFahrenheit.Text = "Invalid";
+            }
+            else
+            {
+                InCelcius.Text = (Math.Round((input - 273.15), 2)).ToString();
+                InFahrenheit.Text = (Math.Round((input * 9 / 5 - 459.67), 2)).ToString();
+            }
         }
     }
 }
